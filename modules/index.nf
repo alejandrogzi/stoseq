@@ -8,13 +8,15 @@ process INDEX {
         file fasta
         file gtf
         val out
+
     output:
-        path(star), emit: genome_dir
+        path(index), emit: genome_dir
+        
     script:
     """
-    mkdir star
+    mkdir index
 
-    STAR --runThreadN ${task.cpus} --runMode genomeGenerate --genomeDir $out/star \\
+    STAR --runThreadN ${task.cpus} --runMode genomeGenerate --genomeDir $out/index \\
     --genomeFastaFiles $fasta \\
     --genomeSAindexNbases 14 \\
     --sjdbGTFfile $gtf \\

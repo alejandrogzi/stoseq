@@ -22,7 +22,7 @@ process STAR2PASS {
 
     script:
     """
-    mkdir -p $out/bam-2pass/${sample}
+    mkdir -p $out/star-2pass/${sample}
 
     STAR --genomeDir ${genome_dir} \\
     --readFilesCommand zcat \\
