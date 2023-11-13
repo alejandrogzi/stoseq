@@ -6,6 +6,7 @@ include { INDEX } from './modules/index'
 include { STAR } from './modules/star'
 include { STAR2PASS } from './modules/star2pass'
 
+
 workflow {
     params.dir = 'NONE'
     params.out = null
@@ -21,15 +22,14 @@ workflow {
     fastqs = Channel.fromFilePairs("${params.dir}/*_{1,2}.fastq*.gz")
     fasta = file("${params.dir}/*.fa")
     gtf = file("${params.dir}/*.gtf")
+    genome_dir = "${out}/index"
 
     TRIMMOMATIC(fastqs, out).set { trimmed_fastqs }
 
-    if (!file("${out}/star/SAindex").exists()) {
-        genome_dir = INDEX(fasta, gtf).genome_dir
-    } else {
-        genome_dir = "${out}/star"
-    }
-
+    if (!file("${out}/index/SAindex").exists()) {
+        INDEX(fasta, gtf, out)
+    } 
+    
     STAR(fasta, trimmed_fastqs, genome_dir, out).set { star_out }
-    // STAR2PASS(fasta, reads_ch, STAR.out.junctions.collect(), genome_dir)
+    STAR2PASS(fasta, trimmed_fastqs, STAR.out.junctions.collect(), genome_dir, out)
 }
