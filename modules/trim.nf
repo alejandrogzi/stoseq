@@ -25,6 +25,7 @@ process TRIMMOMATIC {
     ${fastq[0]} ${fastq[1]} \\
     ${sample}.paired.trim_1.fastq.gz ${sample}.unpaired.trim_1.fastq.gz \\
     ${sample}.paired.trim_2.fastq.gz ${sample}.unpaired.trim_2.fastq.gz \\
+    -phred33 \\
     SLIDINGWINDOW:4:20 MINLEN:36
 
     rm ${sample}.unpaired.trim_1.fastq.gz ${sample}.unpaired.trim_2.fastq.gz
