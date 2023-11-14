@@ -1,4 +1,4 @@
-name: getfastq
+name: stoseq
 channels:
  - conda-forge
  - bioconda
