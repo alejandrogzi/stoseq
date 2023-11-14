@@ -1,1 +1,4 @@
-./genome
+genome/
+.nextflow.log
+.nextflow/
+*.txt
