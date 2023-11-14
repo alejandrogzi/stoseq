@@ -4,13 +4,12 @@
 process TRIMMOMATIC {
 
     publishDir "${out}/trimmomatic/${sample}", mode: 'copy', overwrite: 'false'
-    executor 'local'
     cpus 6
-    debug true
 
     input:
         tuple val(sample), path(fastq)
         val out
+        val dir
 
     output:
         tuple val(sample), path("*.paired.trim*.fastq.gz"), emit: trim_paired
@@ -29,6 +28,9 @@ process TRIMMOMATIC {
     SLIDINGWINDOW:4:20 MINLEN:36
 
     rm ${sample}.unpaired.trim_1.fastq.gz ${sample}.unpaired.trim_2.fastq.gz
-    rm ${params.dir}/${fastq[0]} ${params.dir}/${fastq[1]}
+    rm ${dir}/${fastq[0]} ${dir}/${fastq[1]}
+
+    find ../../ -name ${fastq[0]} -type f -delete
+    find ../../ -name ${fastq[1]} -type f -delete
     """
 }
