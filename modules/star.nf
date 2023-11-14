@@ -7,7 +7,6 @@ process STAR {
     cpus 15
 
     input:
-        file fasta
         tuple val(sample), file(fastqs)
         path genome_dir
         val out
@@ -20,15 +19,16 @@ process STAR {
 
     script:
     """
-    mkdir -p $out/bam/${sample}
+    mkdir -p ${out}}/star/${sample}
 
     STAR --genomeDir ${genome_dir} \\
     --outFileNamePrefix "${sample}." \\
-    --readFilesIn $fastqs \\
+    --readFilesIn ${fastqs} \\
     --runThreadN ${task.cpus} \\
     --readFilesCommand zcat --outFilterType BySJout \\
     --outSAMtype BAM Unsorted --alignSJoverhangMin 5 \\
-    --alignSJDBoverhangMin 3 --outFilterMismatchNmax 10
+    --alignSJDBoverhangMin 3 --outFilterMismatchNmax 10 \\
+    --outSAMunmapped None
 
     rm ${sample}.Aligned.out.bam
     """ 
