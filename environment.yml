@@ -1,7 +1,7 @@
 name: stoseq
 channels:
- - conda-forge
- - bioconda
+  - conda-forge
+  - bioconda
 dependencies:
   - trimmomatic
   - star
@@ -12,9 +12,12 @@ dependencies:
   - python >=3.7,<3.11
   - sra-tools >=3.0.1
   - wget
+  - fastqc
+  - salmon
   - pip:
     - requests
     - rich
     - rich-click
     - executor
     - pysradb
+    - multiqc
