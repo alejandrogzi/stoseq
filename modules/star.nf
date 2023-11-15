@@ -19,7 +19,7 @@ process STAR {
 
     script:
     """
-    mkdir -p ${out}}/star/${sample}
+    mkdir -p ${out}/star/${sample}
 
     STAR --genomeDir ${genome_dir} \\
     --outFileNamePrefix "${sample}." \\

@@ -8,7 +8,7 @@ process STAR2PASS {
 
     input:
         tuple val(sample), file(fastqs)
-        path junction_files
+        path junctions
         path genome_dir
         val out
 
@@ -28,7 +28,7 @@ process STAR2PASS {
     --readFilesIn ${fastqs} \\
     --runThreadN ${task.cpus} \\
     --outFileNamePrefix "${sample}.2pass." \\
-    --sjdbFileChrStartEnd ${junction_files} \\
+    --sjdbFileChrStartEnd ${junctions} \\
     --quantMode GeneCounts TranscriptomeSAM \\
     --outSAMtype BAM SortedByCoordinate \\
     --outSAMattributes NH HI AS nM MD ch \\
