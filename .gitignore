@@ -2,3 +2,7 @@ genome/
 .nextflow.log
 .nextflow/
 *.txt
+results/
+work/
+.nextflow.log*
+```
