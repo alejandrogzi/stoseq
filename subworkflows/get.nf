@@ -16,7 +16,7 @@ process GET {
 }
 
 
-workflow  GET_FASTQ {
+workflow GET_FASTQ {
     take:
     runlist
 
