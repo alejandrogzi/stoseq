@@ -10,9 +10,9 @@
 //*
 //* usage:
 //*
-//* nextflow run main.nf --runlist --genome --gtf --out [to download runs and index]
+//* nextflow run main.nf --runlist --genome --gtf --out [to download runs]
 //*
-//* nextflow run main.nf --dir --genome --gtf --out [to use local fastqs and index]
+//* nextflow run main.nf --dir --genome --gtf --out [to use local fastqs]
 
 
 // modules
@@ -35,13 +35,14 @@ workflow {
     if (params.dir == '.') {
         fastqs = GET_FASTQ(params.runlist).fastqs
     } else {
-        fastqs = Channel.fromFilePairs("${params.dir}/*_{1,2}.fastq*.gz")
+        fastqs = Channel.fromFilePairs("${params.dir}/*_{1,2}.fastq.gz")
     }
 
-    file(params.out).mkdir()
-    genome_dir = "${params.out}/index"
+    out = file(params.out)
+    out.mkdir()
+    genome_dir = "${out}/index"
 
-    TRIMMOMATIC(fastqs, params.out, params.dir)
+    trim_fq = TRIMMOMATIC(fastqs, params.out, params.dir)
 
     if (params.fqc) {
         FASTQC(TRIMMOMATIC.out.trim_paired, params.out)
@@ -50,16 +51,18 @@ workflow {
     if (!file("${params.out}/index/SAindex").exists()) {
         genome = file(params.genome)
         gtf = file(params.gtf)
-        INDEX(genome, gtf, params.out)
+        idx = INDEX(genome, gtf, params.out)
     } 
     
-    STAR(TRIMMOMATIC.out.trim_paired, genome_dir, params.out)
+    bam = STAR(trim_fq.trim_paired, genome_dir, out)
 
     if (!params.salmon) {
-        STAR2PASS(TRIMMOMATIC.out.trim_paired, STAR.out.junctions.collect(), genome_dir, params.out)
+        bam2pass = STAR2PASS(trim_fq.trim_paired, bam.junctions.collect(), genome_dir, out)
     } else {
         QUANT(TRIMMOMATIC.out.trim_paired, STAR.out.junctions.collect(), genome_dir, params.out, params.transcriptome)
     }
 }
 
-workflow.onComplete{ WorkflowMain.end(workflow, params, log) }
+workflow.onComplete{ 
+ WorkflowMain.end(workflow, params, log) 
+}
