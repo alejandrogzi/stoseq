@@ -17,6 +17,7 @@
 
 // modules
 include { TRIMMOMATIC } from './modules/trim'
+include { RRNA } from './modules/rrna'
 include { FASTQC } from './modules/fastqc'
 include { INDEX } from './modules/index'
 include { STAR } from './modules/star'
@@ -44,6 +45,9 @@ workflow {
 
     trim_fq = TRIMMOMATIC(fastqs, params.out, params.dir)
 
+    rrna_db = Channel.from("${params.rrna}/*.fasta").map{fa -> file(fa)}.collect()
+    rrna_fq = RRNA(trim_fq.trim_paired, rrna_db)
+
     if (params.fqc) {
         FASTQC(TRIMMOMATIC.out.trim_paired, params.out)
     }
@@ -54,7 +58,7 @@ workflow {
         idx = INDEX(genome, gtf, params.out)
     } 
     
-    bam = STAR(trim_fq.trim_paired, genome_dir, out)
+    bam = STAR(rrna_fq.reads, genome_dir, out)
 
     if (!params.salmon) {
         bam2pass = STAR2PASS(trim_fq.trim_paired, bam.junctions.collect(), genome_dir, out)
