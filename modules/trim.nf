@@ -28,9 +28,9 @@ process TRIMMOMATIC {
     SLIDINGWINDOW:4:20 MINLEN:36
 
     rm ${sample}.unpaired.trim_1.fastq.gz ${sample}.unpaired.trim_2.fastq.gz
-    rm ${dir}/${fastq[0]} ${dir}/${fastq[1]}
+    #rm ${dir}/${fastq[0]} ${dir}/${fastq[1]}
 
-    find ../../ -name ${fastq[0]} -type f -delete
-    find ../../ -name ${fastq[1]} -type f -delete
+    #find ../../ -name ${fastq[0]} -type f -delete
+    #find ../../ -name ${fastq[1]} -type f -delete
     """
 }

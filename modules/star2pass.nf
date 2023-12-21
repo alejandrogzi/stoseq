@@ -37,6 +37,6 @@ process STAR2PASS {
 
     # samtools index "${sample}.2pass.Aligned.sortedByCoord.out.bam"
 
-    rm *.bam
+    #rm *.bam
     """
 }
