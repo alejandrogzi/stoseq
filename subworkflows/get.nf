@@ -11,7 +11,7 @@ process GET {
 
     script:
     """
-    ../../../bin/fastq-dl.py -a ${run} --cpus 1 --max-attempts 30 --sleep 120 
+    ../../../bin/get.py -a ${run} --max-attempts 30 --sleep 120 
     """
 }
 
