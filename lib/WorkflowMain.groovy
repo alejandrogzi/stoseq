@@ -79,21 +79,30 @@ class WorkflowMain {
             System.exit(1)
         }
 
-        if (params.salmon && !params.genome && !params.gtf) {
+        def salmon_idx = new File("${params.out}/salmon/quant.sf")
+        if (!salmon_idx.exists() && params.salmon && !params.genome && !params.gtf) {
             log.info "\n"
-            log.error "Genome index not found. Please specify --genome and --gtf"
+            log.error "Gentrome index not found. Please specify --genome and --gtf"
             log.info "\n\n"
             log.info help(workflow, params)
             System.exit(1)
         }
 
-        if (params.salmon && params.genome && params.gtf && !params.transcriptome) {
-            log.info "\n"
-            log.error "Transcriptome not found. Please specify --transcriptome"
-            log.info "\n\n"
-            log.info help(workflow, params)
-            System.exit(1)
-        }
+        // if (params.salmon && !params.genome && !params.gtf) {
+        //     log.info "\n"
+        //     log.error "Genome index not found. Please specify --genome and --gtf"
+        //     log.info "\n\n"
+        //     log.info help(workflow, params)
+        //     System.exit(1)
+        // }
+
+        // if (params.salmon && params.genome && params.gtf && !params.transcriptome) {
+        //     log.info "\n"
+        //     log.error "Transcriptome not found. Please specify --transcriptome"
+        //     log.info "\n\n"
+        //     log.info help(workflow, params)
+        //     System.exit(1)
+        // }
     }
 
     // Stoseq end point
