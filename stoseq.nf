@@ -16,12 +16,14 @@
 
 
 // modules
-include { TRIMMOMATIC } from './modules/trim'
-include { RRNA } from './modules/rrna'
-include { FASTQC } from './modules/fastqc'
-include { INDEX } from './modules/index'
-include { STAR } from './modules/star'
-include { STAR2PASS } from './modules/star2pass'
+include { MAKE_TRANSCRIPTOME } from './modules/to-trans/to-trans'
+include { TRIMMOMATIC } from './modules/trim/trimmomatic'
+include { TRIM_GALORE } from './modules/trim/trim_galore'
+include { RRNA } from './modules/sortmerna/rrna'
+include { FASTQC } from './modules/fastqc/fastqc'
+include { INDEX } from './modules/star/index'
+include { STAR } from './modules/star/star'
+include { STAR2PASS } from './modules/star/star2pass'
 
 // subworkflows
 include { GET_FASTQ } from './subworkflows/get'
@@ -42,8 +44,13 @@ workflow {
     out = file(params.out)
     out.mkdir()
     genome_dir = "${out}/index"
+    gentrome_dir = "${out}/salmon"
 
-    trim_fq = TRIMMOMATIC(fastqs, params.out, params.dir)
+    if (params.trim) {
+      trim_fq = TRIM_GALORE(fastqs, params.out, params.dir)
+    } else {
+      trim_fq = TRIMMOMATIC(fastqs, params.out, params.dir)
+    }
 
     rrna_db = Channel.from("${params.rrna}/*.fasta").map{fa -> file(fa)}.collect()
     rrna_fq = RRNA(trim_fq.trim_paired, rrna_db)
@@ -52,19 +59,21 @@ workflow {
         FASTQC(TRIMMOMATIC.out.trim_paired, params.out)
     }
 
-    if (!file("${params.out}/index/SAindex").exists()) {
+    if (!file("${params.out}/salmon/quant.sf").exists()) {
         genome = file(params.genome)
         gtf = file(params.gtf)
+        transcriptome = MAKE_TRANSCRIPTOME(genome, gtf)
+        salmon_idx = SALMON_INDEX(genome, transcriptome, params.out)
+    }
+
+    if (!file("${params.out}/index/SAindex").exists()) {
         idx = INDEX(genome, gtf, params.out)
     } 
-    
-    bam = STAR(rrna_fq.reads, genome_dir, out)
 
-    if (!params.salmon) {
-        bam2pass = STAR2PASS(trim_fq.trim_paired, bam.junctions.collect(), genome_dir, out)
-    } else {
-        QUANT(TRIMMOMATIC.out.trim_paired, STAR.out.junctions.collect(), genome_dir, params.out, params.transcriptome)
-    }
+    bam = STAR(rrna_fq.reads, genome_dir, out)
+    bam2pass = STAR2PASS(rrna_fq.reads, bam.junctions.collect(), genome_dir, out)
+    salmon = QUANT(bam2pass.bam, gentrome_dir, out)
+
 }
 
 workflow.onComplete{ 
