@@ -3,6 +3,7 @@
 process SALMON_INDEX {
 
     publishDir "${params.outdir}/salmon_index", mode: 'copy'
+    cpus 8
 
     input:
     path genome_fasta
@@ -10,7 +11,6 @@ process SALMON_INDEX {
 
     output:
     path "salmon"      , emit: index
-    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when

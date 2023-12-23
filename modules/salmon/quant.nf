@@ -1,15 +1,15 @@
 #!/usr/env/bin nextflow
 
-process SALMON_QUANT {
+process QUANT {
 
     publishDir "${out}/salmon/${sample}", mode: 'copy', overwrite: 'false'
     cpus 10
 
     input:
-        file transcriptome
+        path gtf
+        path transcriptome
         tuple val(sample), file(bam)
         val out
-
 
     output:
         tuple val(sample), path("*.sf"), emit: quant
@@ -21,6 +21,7 @@ process SALMON_QUANT {
     salmon quant \\
     -t ${transcriptome} \\
     -l A \\
+    --geneMap ${gtf} \\
     -a ${bam} \\
     --threads ${task.cpus} \\
     -numErrorBins '6' --incompatPrior '0.0' \\
@@ -30,8 +31,8 @@ process SALMON_QUANT {
     --numAuxModelSamples '5000000' --numPreAuxModelSamples '5000'  \\
     --numGibbsSamples '0'  --numBootstraps '0'  \\
     --thinningFactor '16'  --sigDigits '3' --vbPrior '1e-05' \\
-    -o salmon_output
+    -o ${sample}
 
-    find ../../ -name ${bam} -type f -delete
+    # find ../../ -name ${bam} -type f -delete
     """
 }
