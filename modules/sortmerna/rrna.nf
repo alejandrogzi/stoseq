@@ -3,11 +3,13 @@
 
 process RRNA {
 
+  publishDir "${params.outdir}/RRNA_reads/${sample}", mode: 'copy'
   cpus 10 
 
   input:
   tuple val(sample), path(fastqs)
   path db
+  val out
 
   output:
     tuple val(sample), path("*non_rRNA.fastq.gz"), emit: reads
