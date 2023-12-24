@@ -19,6 +19,7 @@ include { MAKE_TRANSCRIPTOME } from './modules/to-trans/to-trans'
 include { TRIMMOMATIC } from './modules/trim/trimmomatic'
 include { TRIM_GALORE } from './modules/trim/trim_galore'
 include { RRNA } from './modules/sortmerna/rrna'
+include { RIBODETECTOR } from './modules/ribodetector/ribodetector'
 include { FASTQC } from './modules/fastqc/fastqc'
 include { INDEX } from './modules/star/index'
 include { STAR } from './modules/star/star'
@@ -50,9 +51,13 @@ workflow {
      } else {
        trim_fq = TRIMMOMATIC(fastqs, out, dir)
      }
- 
-     rrna_db = Channel.from("./assets/rrna_dbs/*.fasta").map{fa -> file(fa)}.collect()
-     rrna_fq = RRNA(trim_fq, rrna_db, out)
+
+     if (params.ribodetector) {
+         rfastq = RIBODETECTOR(trim_fq, out)
+     } else {
+       rrna_db = Channel.from("./assets/rrna_dbs/*.fasta").map{fa -> file(fa)}.collect()
+       rfastq = RRNA(trim_fq, rrna_db, out)
+     }
  
      if (params.fqc) {
          FASTQC(trim_fq, out)
@@ -65,8 +70,8 @@ workflow {
      gtf = file(params.gtf)
      transcriptome = MAKE_TRANSCRIPTOME(genome, gtf)
 
-     bam = STAR(rrna_fq.reads, genome_dir, out)
-     bam2pass = STAR2PASS(rrna_fq.reads, bam.junctions.collect(), genome_dir, out)
+     bam = STAR(rfastq.reads, genome_dir, out)
+     bam2pass = STAR2PASS(rfastq.reads, bam.junctions.collect(), genome_dir, out)
      salmon = QUANT(gtf, transcriptome, bam2pass.bam, out)
 }
 
