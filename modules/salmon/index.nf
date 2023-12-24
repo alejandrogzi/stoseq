@@ -2,12 +2,13 @@
 
 process SALMON_INDEX {
 
-    publishDir "${params.outdir}/salmon_index", mode: 'copy'
+    publishDir "${out}/salmon_index", mode: 'copy'
     cpus 8
 
     input:
     path genome_fasta
     path transcript_fasta
+    val out
 
     output:
     path "salmon"      , emit: index
