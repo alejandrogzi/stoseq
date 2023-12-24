@@ -8,6 +8,7 @@ process TRIM_GALORE {
 
   input:
   tuple val(sample), path(fastqs)
+  val out
 
   output:
   tuple val(sample), path("*.fastq.gz"), emit: trim_fq

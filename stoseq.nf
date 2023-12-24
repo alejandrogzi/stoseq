@@ -47,9 +47,9 @@ workflow {
      genome_dir = "${out}/index"
  
      if (params.trim) {
-       trim_fq = TRIM_GALORE(fastqs, out, dir)
+       trim_fq = TRIM_GALORE(fastqs, out)
      } else {
-       trim_fq = TRIMMOMATIC(fastqs, out, dir)
+       trim_fq = TRIMMOMATIC(fastqs, out)
      }
 
      if (params.ribodetector) {

@@ -9,7 +9,7 @@ process TRIMMOMATIC {
     input:
         tuple val(sample), path(fastq)
         val out
-        val dir
+        // val dir
 
     output:
         tuple val(sample), path("*.paired.trim*.fastq.gz"), emit: trim_paired
