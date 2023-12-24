@@ -44,8 +44,10 @@ workflow {
 
      out = file(params.out)
      out.mkdir()
+
+     genome = file(params.genome)
      genome_dir = "${out}/index"
- 
+
      if (params.trim) {
        trim_fq = TRIM_GALORE(fastqs, out)
      } else {
