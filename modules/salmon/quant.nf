@@ -2,7 +2,7 @@
 
 process QUANT {
 
-    publishDir "${out}/salmon/${sample}", mode: 'copy', overwrite: 'false'
+    publishDir "${out}/salmon", mode: 'copy', overwrite: 'false'
     cpus 10
 
     input:
@@ -12,7 +12,8 @@ process QUANT {
         val out
 
     output:
-        tuple val(sample), path("*.sf"), emit: quant
+        tuple val(sample), path("${sample}/*genes.sf"), emit: gene
+        tuple val(sample), path("${sample}/quant.sf"), emit: transcript
 
     script:
     """
