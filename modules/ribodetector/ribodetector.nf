@@ -17,7 +17,7 @@ process RIBODETECTOR {
   ribodetector_cpu \\
   -t ${task.cpus} \\
   -l 50 \\
-  -i fastqs \\
+  -i ${fastqs} \\
   -e rrna \\
   -o ${sample}.non_rRNA_1.fastq ${sample}.non_rRNA_2.fastq
 
