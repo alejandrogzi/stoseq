@@ -39,7 +39,7 @@ workflow {
      if (dir == '.') {
          fastqs = GET_FASTQ(params.runlist).fastqs
      } else {
-         fastqs = Channel.fromFilePairs("${dir}/*_{1,2}.fastq.gz")
+         fastqs = Channel.fromFilePairs("${dir}/*_{1,2}.f*q.gz")
      }
 
      out = file(params.out)
