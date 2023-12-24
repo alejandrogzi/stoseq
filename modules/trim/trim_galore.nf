@@ -1,5 +1,4 @@
-
-
+#!/usr/env/bin nextflow
 
 process TRIM_GALORE {
 
