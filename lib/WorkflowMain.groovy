@@ -31,7 +31,6 @@ class WorkflowMain {
         "Flags:\n" +
         "  --fqc           FastQC flag. If set to true, it will produce a quality assesment over trimmed fastqs. Default: false\n" +
         "  --mqc           MultiQC flag. If set to true, it will produce a quality assesment over trimmed fastqs and STAR stats. Default: false\n" +
-        "  --salmon        Salmon flag. If set to true, it will quantify transcripts from the 2pass STAR run. Default: false\n" +
         "\n" +
         "Examples:\n\n" +
         " If you want to run the basic pipeline on a list of SRA/ENA accessions, create a file with one accession per line and run:\n\n" +
@@ -74,15 +73,6 @@ class WorkflowMain {
         if (!idx.exists() && !params.genome && !params.gtf) {
             log.info "\n"
             log.error "Genome index not found. Please specify --genome and --gtf"
-            log.info "\n\n"
-            log.info help(workflow, params)
-            System.exit(1)
-        }
-
-        def salmon_idx = new File("${params.out}/salmon/quant.sf")
-        if (!salmon_idx.exists() && params.salmon && !params.genome && !params.gtf) {
-            log.info "\n"
-            log.error "Gentrome index not found. Please specify --genome and --gtf"
             log.info "\n\n"
             log.info help(workflow, params)
             System.exit(1)
