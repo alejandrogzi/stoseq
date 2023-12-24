@@ -11,7 +11,7 @@ process TRIM_GALORE {
   val out
 
   output:
-  tuple val(sample), path("*.fastq.gz"), emit: trim_fq
+  tuple val(sample), path("*.f*q.gz"), emit: trim_fq
 
   script:
   """
