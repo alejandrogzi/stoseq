@@ -17,7 +17,7 @@ process STAR2PASS {
         // tuple val(sample), file("*ReadsPerGene*.tab"), emit: counts
         // tuple val(sample), file("*sortedByCoord*.bam"), emit: bam2pass
         // tuple val(sample), file("*.bai"), emit: bam2index
-        tuple val(sample), file("*toTranscriptome*.bam"), emit: bam2transcriptome
+        tuple val(sample), file("*toTranscriptome*.bam"), emit: bam
 
     script:
     """
