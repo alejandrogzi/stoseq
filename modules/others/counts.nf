@@ -1,11 +1,12 @@
 #!/usr/bin/env nextflow
 
 process REDUCE_COUNTS {
-
-  debug true
-
+  
+  publishDir "${out}/counts", mode: 'copy'
+  
   input:
   path samples
+  val out
 
   output:
   path "counts.txt", emit: matrix

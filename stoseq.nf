@@ -78,7 +78,7 @@ workflow {
      salmon = QUANT(gtf, transcriptome, bam2pass.bam, out)
      
      salmon.gene.collect().set{counts}
-     mtx = REDUCE(counts)
+     mtx = REDUCE(counts, out)
 }
 
 workflow.onComplete{ 
