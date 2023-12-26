@@ -12,7 +12,7 @@ process QUANT {
         val out
 
     output:
-        tuple val(sample), path("${sample}/*genes.sf"), emit: gene
+        path("${sample}/*genes.sf"), emit: gene
         tuple val(sample), path("${sample}/quant.sf"), emit: transcript
 
     script:
@@ -27,6 +27,7 @@ process QUANT {
     --threads ${task.cpus} \\
     -o ${sample}
 
+    mv ${sample}/quant.genes.sf ${sample}/${sample}.genes.sf
     # find ../../ -name ${bam} -type f -delete
     """
 }
