@@ -26,6 +26,7 @@ include { STAR } from './modules/star/star'
 include { STAR2PASS } from './modules/star/star2pass'
 include { SALMON_INDEX } from './modules/salmon/index'
 include { QUANT } from './modules/salmon/quant'
+include { REDUCE_COUNTS as REDUCE } from './modules/others/counts'
 
 // subworkflows
 include { GET_FASTQ } from './subworkflows/get'
@@ -75,6 +76,9 @@ workflow {
      bam = STAR(rfastq.reads, genome_dir, out)
      bam2pass = STAR2PASS(rfastq.reads, bam.junctions.collect(), genome_dir, out)
      salmon = QUANT(gtf, transcriptome, bam2pass.bam, out)
+     
+     salmon.gene.collect().set{counts}
+     mtx = REDUCE(counts)
 }
 
 workflow.onComplete{ 
