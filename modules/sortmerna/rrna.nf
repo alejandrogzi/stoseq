@@ -3,7 +3,7 @@
 
 process RRNA {
 
-  publishDir "${params.outdir}/RRNA_reads/${sample}", mode: 'copy'
+  publishDir "${out}/RRNA_reads/${sample}", mode: 'copy'
   cpus 10 
 
   input:
