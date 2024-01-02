@@ -16,7 +16,7 @@ process TRIMMOMATIC {
 
     script:
     """
-    mkdir -p ${out}/trim/${sample}
+    ADAPTERS=\$(dirname \$(readlink -f \$(which trimmomatic)))'/adapters/TruSeq3-PE.fa'
 
     trimmomatic \\
     PE \\
@@ -25,7 +25,9 @@ process TRIMMOMATIC {
     ${sample}.paired.trim_1.fastq.gz ${sample}.unpaired.trim_1.fastq.gz \\
     ${sample}.paired.trim_2.fastq.gz ${sample}.unpaired.trim_2.fastq.gz \\
     -phred33 \\
-    SLIDINGWINDOW:4:20 MINLEN:36
+    ILLUMINACLIP:\$ADAPTERS:2:30:10 \\
+    SLIDINGWINDOW:4:20 MINLEN:36 \\
+    LEADING:20 TRAILING:20 \\
 
     rm ${sample}.unpaired.trim_1.fastq.gz ${sample}.unpaired.trim_2.fastq.gz
     #rm ${dir}/${fastq[0]} ${dir}/${fastq[1]}
