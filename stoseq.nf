@@ -58,9 +58,14 @@ workflow {
      if (params.ribodetector) {
          rfastq = RIBODETECTOR(trim_fq, out)
      } else {
-       rrna_db = Channel.from("./assets/rrna_dbs/*.fasta").map{fa -> file(fa)}.collect()
-       rfastq = RRNA(trim_fq, rrna_db, out)
-     }
+       if (params.rrna_db) {
+         rrna_db = Channel.from("./assets/rrna_dbs/*.fasta").map{fa -> file(fa)}.collect()
+         rfastq = RRNA(trim_fq, rrna_db, out)
+         } else {
+          rrna_db = Channel.from("./assets/rrna_dbs/silva-euk*.fasta").map{fa -> file(fa)}.collect()
+          rfastq = RRNA(trim_fq, rrna_db, out)
+          }
+      }
  
      if (params.fqc) {
          FASTQC(trim_fq, out)
